@@ -1,13 +1,12 @@
 // ==UserScript==
 // @name         Youtube Shorts Player
-// @namespace    http://tampermonkey.net/
-// @version      2024-01-13
-// @description  Allow to control shorts player
-// @author       aleqsunder
+// @namespace    https://www.youtube.com/
+// @match        https://www.youtube.com/*
 // @version      0.0.1
 // @updateURL    https://raw.githubusercontent.com/aleqsunder/youtube-shorts-player/main/player.js
 // @downloadURL  https://raw.githubusercontent.com/aleqsunder/youtube-shorts-player/main/player.js
-// @match        *://www.youtube.com/*
+// @description  Allow to control shorts player
+// @author       aleqsunder
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @grant        none
 // ==/UserScript==
