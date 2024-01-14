@@ -2,7 +2,7 @@
 // @name         Youtube Shorts Player
 // @namespace    https://www.youtube.com/
 // @match        https://www.youtube.com/*
-// @version      0.0.1
+// @version      0.0.2
 // @updateURL    https://raw.githubusercontent.com/aleqsunder/youtube-shorts-player/main/player.user.js
 // @downloadURL  https://raw.githubusercontent.com/aleqsunder/youtube-shorts-player/main/player.user.js
 // @description  Allow to control shorts player
@@ -281,10 +281,15 @@
 
 .${PANEL_CLASSNAME}-audio-block {
     position: relative;
+    opacity: 0;
 }
 
 .${PANEL_CLASSNAME}-audio-block:hover input[type="range"] {
     right: -114px;
+}
+
+.${PANEL_CLASSNAME}-audio-block:hover .${PANEL_CLASSNAME}-audio {
+    opacity: 1;
 }
 
 .${PANEL_CLASSNAME} input[type="range"] {
