@@ -273,7 +273,6 @@
     transform: rotate(-90deg);
     transform-origin: top left;
     position: absolute !important;
-    right: -155px;
     bottom: 17px;
 
     transition: all .15s;
@@ -281,15 +280,16 @@
 
 .${PANEL_CLASSNAME}-audio-block {
     position: relative;
+}
+
+.${PANEL_CLASSNAME}-audio-block input[type="range"] {
     opacity: 0;
+    right: -155px;
 }
 
 .${PANEL_CLASSNAME}-audio-block:hover input[type="range"] {
-    right: -114px;
-}
-
-.${PANEL_CLASSNAME}-audio-block:hover .${PANEL_CLASSNAME}-audio {
     opacity: 1;
+    right: -114px;
 }
 
 .${PANEL_CLASSNAME} input[type="range"] {
