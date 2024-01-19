@@ -2,7 +2,7 @@
 // @name         Youtube Shorts Player
 // @namespace    https://www.youtube.com/
 // @match        https://www.youtube.com/*
-// @version      0.0.5
+// @version      0.0.6
 // @updateURL    https://raw.githubusercontent.com/aleqsunder/youtube-shorts-player/main/player.user.js
 // @downloadURL  https://raw.githubusercontent.com/aleqsunder/youtube-shorts-player/main/player.user.js
 // @description  Allow to control shorts player
@@ -26,7 +26,7 @@
     const STYLE_BLOCK_ID = 'yts-aleqsunder'
     const PANEL_CLASSNAME = 'yts-aleqsunder-controls'
 
-    let observer = null
+    let videoObserver = null
     let pathname = window.location.pathname
     let lastVolume = localStorage.getItem('aleqsunder-lastVolume')?.length > 0 ? localStorage.getItem('aleqsunder-lastVolume') : '1'
 
@@ -46,14 +46,18 @@
 
         constructor (player) {
             this.removeOldControls()
-
             this.controller = new ShortsPlayerController(player)
-            this.controls = this.generateControls()
-            this.smallerControls = this.generateSmallerControls()
 
+            this.controls = this.generateControls()
             this.controller.overlay.appendChild(this.controls)
+
+            this.smallerControls = this.generateSmallerControls()
             this.controller.overlay.appendChild(this.smallerControls)
+
+            console.log('createControls and smallerControls')
+
             this.controller.overlay.classList.add('yts-collapse-player')
+            this.removeDuplicateControls()
 
             this.onChangeRangeHandler = this.onChangeRangeHandler.bind(this)
             this.onPlaying = this.onPlaying.bind(this)
@@ -62,9 +66,11 @@
         }
 
         removeOldControls () {
-            const bar = document.getElementById('progress-bar')
-            if (bar) {
-                bar.remove()
+            const bars = document.querySelectorAll('[id="progress-bar"]')
+            if (bars?.length > 0) {
+                for (let bar of bars) {
+                    bar.remove()
+                }
             }
 
             const panels = document.getElementsByClassName('player-controls')
@@ -267,15 +273,19 @@
             for (let node of mutation.addedNodes) {
                 if (node.tagName == PLAYER_TAG_NAME && node.id == PLAYER_ID) {
                     updatePlayerCallback(node)
-                    observer.disconnect()
+                    videoObserver.disconnect()
                 }
             }
         }
     }
 
     function runVideoObserver () {
-        observer = new MutationObserver(videoObserverCallback)
-        observer.observe(document.body, {childList: true, subtree: true})
+        if (videoObserver instanceof MutationObserver) {
+            videoObserver.disconnect()
+        }
+
+        videoObserver = new MutationObserver(videoObserverCallback)
+        videoObserver.observe(document.body, {childList: true, subtree: true})
     }
 
     function addStyleBlock () {
@@ -549,8 +559,8 @@ ytd-reel-video-renderer:hover .${PANEL_CLASSNAME}-small {
         addStyleBlock()
         runVideoObserver()
 
-        const observer = new MutationObserver(observerCallback)
-        observer.observe(document.body, {childList: true, subtree: true})
+        const mainObserver = new MutationObserver(observerCallback)
+        mainObserver.observe(document.body, {childList: true, subtree: true})
     }
 
     main()
