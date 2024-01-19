@@ -2,7 +2,7 @@
 // @name         Youtube Shorts Player
 // @namespace    https://www.youtube.com/
 // @match        https://www.youtube.com/*
-// @version      0.0.3
+// @version      0.0.4
 // @updateURL    https://raw.githubusercontent.com/aleqsunder/youtube-shorts-player/main/player.user.js
 // @downloadURL  https://raw.githubusercontent.com/aleqsunder/youtube-shorts-player/main/player.user.js
 // @description  Allow to control shorts player
@@ -49,8 +49,11 @@
 
             this.controller = new ShortsPlayerController(player)
             this.controls = this.generateControls()
+            this.smallerControls = this.generateSmallerControls()
 
             this.controller.overlay.appendChild(this.controls)
+            this.controller.overlay.appendChild(this.smallerControls)
+            this.controller.overlay.classList.add('yts-collapse-player')
 
             this.onChangeRangeHandler = this.onChangeRangeHandler.bind(this)
             this.onPlaying = this.onPlaying.bind(this)
@@ -119,11 +122,24 @@
                 videoRange.setAttribute(attribute, this.attributes[attribute])
             }
 
+            videoRange.classList.add(`${PANEL_CLASSNAME}-input`)
+
             videoRange.addEventListener('change', _ => this.onChangeVideoRangeHandler(videoRange))
             videoRange.addEventListener('mousedown', _ => this.changing = true)
             videoRange.addEventListener('mouseup', _ => this.changing = false)
 
             return videoRange
+        }
+
+        generateSmallVideoRange () {
+            const smallVideoRange = document.createElement('input')
+            for (let attribute of Object.keys(this.attributes)) {
+                smallVideoRange.setAttribute(attribute, this.attributes[attribute])
+            }
+
+            smallVideoRange.classList.add(`${PANEL_CLASSNAME}-input-small`)
+
+            return smallVideoRange
         }
 
         onChangeAudioRangeHandler (range) {
@@ -147,6 +163,8 @@
                 audioRange.setAttribute(attribute, this.attributes[attribute])
             }
 
+
+            audioRange.classList.add(`${PANEL_CLASSNAME}-input`)
             audioRange.classList.add(`${PANEL_CLASSNAME}-audio`)
             audioRange.addEventListener('input', _ => this.onChangeAudioRangeHandler(audioRange))
 
@@ -173,7 +191,7 @@
 
         generateControls () {
             const controls = document.createElement('div')
-            controls.className = PANEL_CLASSNAME
+            controls.classList.add(PANEL_CLASSNAME)
 
             const playButton = this.generatePlayButton()
             controls.appendChild(playButton)
@@ -185,6 +203,19 @@
             controls.appendChild(audioRange)
 
             setInterval(_ => this.updateRangeHandler(videoRange), 1000/30)
+
+            return controls
+        }
+
+        generateSmallerControls () {
+            const controls = document.createElement('div')
+            controls.classList.add(PANEL_CLASSNAME)
+            controls.classList.add(PANEL_CLASSNAME + '-small')
+
+            const smallVideoRange = this.generateSmallVideoRange()
+            controls.appendChild(smallVideoRange)
+
+            setInterval(_ => this.updateRangeHandler(smallVideoRange), 1000/15)
 
             return controls
         }
@@ -261,7 +292,18 @@
     padding: 1rem;
 }
 
-.${PANEL_CLASSNAME}, .${PANEL_CLASSNAME}-audio {
+
+.${PANEL_CLASSNAME}-small {
+    padding: 0;
+    position: absolute;
+    bottom: 48px;
+    width: 100%;
+
+    transition: all .3s;
+}
+
+.${PANEL_CLASSNAME},
+.${PANEL_CLASSNAME}-audio {
     z-index: 1;
     pointer-events: auto;
     display: flex;
@@ -274,8 +316,9 @@
     transform-origin: top left;
     position: absolute !important;
     bottom: 17px;
+    right: -121px;
 
-    transition: all .15s;
+    transition: all .4s ease-in;
 }
 
 .${PANEL_CLASSNAME}-audio-block {
@@ -284,15 +327,32 @@
 
 .${PANEL_CLASSNAME}-audio-block input[type="range"] {
     opacity: 0;
-    right: -155px;
+    top: 155px;
+}
+
+.${PANEL_CLASSNAME}-audio-block:before {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    width: 47px;
+    height: 195px;
+    background: #00000000;
+    border-top-left-radius: 7px;
+    opacity: 0;
+}
+
+.${PANEL_CLASSNAME}-audio-block:hover:before {
+    opacity: 1;
 }
 
 .${PANEL_CLASSNAME}-audio-block:hover input[type="range"] {
     opacity: 1;
-    right: -114px;
+    top: -8px;
 }
 
-.${PANEL_CLASSNAME} input[type="range"] {
+.${PANEL_CLASSNAME} input.${PANEL_CLASSNAME}-input[type="range"] {
     flex: 1;
 
 	color: #ef233c;
@@ -303,7 +363,19 @@
 	--brightness-down: 80%;
 	--clip-edges: 0em;
 
-    margin: 0 .5rem;
+    margin: 0 1.25rem;
+}
+
+.${PANEL_CLASSNAME} input.${PANEL_CLASSNAME}-input-small[type="range"] {
+    flex: 1;
+
+	color: #ef233c;
+	--thumb-height: 0.2rem;
+    --track-height: 0.2rem;
+	--track-color: rgba(255, 255, 255, .7);
+	--brightness-hover: 180%;
+	--brightness-down: 80%;
+	--clip-edges: 0em;
 }
 
 /* === range commons === */
@@ -439,6 +511,25 @@
 
 .${PANEL_CLASSNAME} input[type="range"]:disabled::-moz-range-thumb {
 	cursor: not-allowed;
+}
+
+.yts-collapse-player {
+    position: relative;
+
+    top: 50px;
+    transition: all .3s;
+}
+
+ytd-reel-video-renderer .ytd-reel-video-renderer {
+    border-radius: 0 0 12px 12px;
+}
+
+ytd-reel-video-renderer:hover .yts-collapse-player {
+    top: 0px;
+}
+
+ytd-reel-video-renderer:hover .${PANEL_CLASSNAME}-small {
+    bottom: -5px;
 }
             `
 
