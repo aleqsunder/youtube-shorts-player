@@ -2,7 +2,7 @@
 // @name         Youtube Shorts Player
 // @namespace    https://www.youtube.com/
 // @match        https://www.youtube.com/*
-// @version      0.0.7
+// @version      0.0.8
 // @updateURL    https://raw.githubusercontent.com/aleqsunder/youtube-shorts-player/main/player.user.js
 // @downloadURL  https://raw.githubusercontent.com/aleqsunder/youtube-shorts-player/main/player.user.js
 // @description  Allow to control shorts player
@@ -31,6 +31,7 @@
     let pathname = window.location.pathname
     let lastVolume = localStorage.getItem('aleqsunder-lastVolume')?.length > 0 ? localStorage.getItem('aleqsunder-lastVolume') : '1'
     let lastSpeed = localStorage.getItem('aleqsunder-lastSpeed')?.length > 0 ? localStorage.getItem('aleqsunder-lastSpeed') : '3'
+    let nextVideoOnFinishPlay = localStorage.getItem('aleqsunder-nextVideoOnFinishPlay')?.length > 0 ? localStorage.getItem('aleqsunder-nextVideoOnFinishPlay') === 'true' : false
 
     class ShortsControlsPanel {
         controller = null
@@ -65,7 +66,10 @@
             this.smallerControls = this.generateSmallerControls()
             this.controller.overlay.appendChild(this.smallerControls)
 
-            console.log('createControls and smallerControls')
+            this.additionalControls = this.generateAdditionalControls()
+            this.controller.container.appendChild(this.additionalControls)
+
+            console.log('Controls created')
 
             this.controller.overlay.classList.add('yts-collapse-player')
             this.removeDuplicateControls()
@@ -258,6 +262,13 @@
             }
 
             range.value = this.controller.video.currentTime / this.controller.video.duration
+
+            if (nextVideoOnFinishPlay) {
+                if (this.controller.video.duration - this.controller.video.currentTime < 0.05) { // tickrate 30/1000 = 0.03
+                    this.controller.video.pause()
+                    document.querySelector('#navigation-button-down yt-button-shape').click()
+                }
+            }
         }
 
         generateControls () {
@@ -293,11 +304,43 @@
 
             return controls
         }
+
+        onToggleAutoplayChecker (button) {
+            nextVideoOnFinishPlay = button.getAttribute('aria-checked') === 'true' ? false : true
+            button.setAttribute('aria-checked', String(nextVideoOnFinishPlay))
+            localStorage.setItem('aleqsunder-nextVideoOnFinishPlay', String(nextVideoOnFinishPlay))
+        }
+
+        generateAutoplayChecker () {
+            const container = document.createElement('div')
+            container.classList.add('ytp-autonav-toggle-button-container')
+
+            const toggleButton = document.createElement('div')
+            toggleButton.classList.add('ytp-autonav-toggle-button')
+            toggleButton.setAttribute('aria-checked', String(nextVideoOnFinishPlay))
+            toggleButton.addEventListener('click', _ => this.onToggleAutoplayChecker(toggleButton))
+
+            container.appendChild(toggleButton)
+
+            return container
+        }
+
+        generateAdditionalControls () {
+            const controls = document.createElement('div')
+            controls.classList.add(PANEL_CLASSNAME)
+            controls.classList.add(PANEL_CLASSNAME + '-additional')
+
+            const autoplay = this.generateAutoplayChecker()
+            controls.appendChild(autoplay)
+
+            return controls
+        }
     }
 
     class ShortsPlayerController {
         _player = null
         _video = null
+        _container = null
         _overlay = null
 
         constructor (player) {
@@ -320,6 +363,15 @@
             }
 
             return this._video
+        }
+
+        get container () {
+            if (!this._container) {
+                const container = this.player.closest('#player-container')
+                this._container = container
+            }
+
+            return this._container
         }
 
         get overlay () {
@@ -381,6 +433,12 @@
     width: 100%;
 
     transition: all .2s ease-in;
+}
+
+.${PANEL_CLASSNAME}-additional {
+    top: 1rem;
+    right: 0;
+    position: absolute;
 }
 
 .${PANEL_CLASSNAME},
