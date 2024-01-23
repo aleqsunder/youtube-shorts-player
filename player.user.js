@@ -2,7 +2,7 @@
 // @name         Youtube Shorts Player
 // @namespace    https://www.youtube.com/
 // @match        https://www.youtube.com/*
-// @version      0.0.8
+// @version      0.0.9
 // @updateURL    https://raw.githubusercontent.com/aleqsunder/youtube-shorts-player/main/player.user.js
 // @downloadURL  https://raw.githubusercontent.com/aleqsunder/youtube-shorts-player/main/player.user.js
 // @description  Allow to control shorts player
@@ -57,7 +57,7 @@
         }
 
         constructor (player) {
-            this.removeOldControls()
+            this.removeOldPanels()
             this.controller = new ShortsPlayerController(player)
 
             this.controls = this.generateControls()
@@ -80,24 +80,39 @@
             this.onPressPlayButton = this.onPressPlayButton.bind(this)
         }
 
-        removeOldControls () {
-            const bars = document.querySelectorAll('[id="progress-bar"]')
+        removeOldPanels () {
+            const bars = [...document.querySelectorAll('[id="progress-bar"]')]
             if (bars?.length > 0) {
                 for (let bar of bars) {
                     bar.remove()
                 }
             }
 
-            const panels = document.getElementsByClassName('player-controls')
+            const panels = [...document.getElementsByClassName('player-controls')]
             if (panels?.length > 0) {
                 for (let panel of panels) {
                     panel.remove()
                 }
             }
 
-            const controls = document.getElementsByClassName(PANEL_CLASSNAME)
-            if (controls?.length > 0) {
+            const controls = [...document.getElementsByClassName(PANEL_CLASSNAME)]
+            if (controls?.length > 1) {
                 for (let control of controls) {
+                    control.remove()
+                }
+            }
+        }
+
+        removeDuplicateControls () {
+            let uniqueList = []
+            const controls = [...document.getElementsByClassName(PANEL_CLASSNAME)]
+            if (controls?.length > 1) {
+                for (let control of controls) {
+                    if (!uniqueList.includes(control.className)) {
+                        uniqueList.push(control.className)
+                        continue
+                    }
+
                     control.remove()
                 }
             }
@@ -340,6 +355,7 @@
     class ShortsPlayerController {
         _player = null
         _video = null
+        _reel = null
         _container = null
         _overlay = null
 
@@ -365,10 +381,17 @@
             return this._video
         }
 
+        get reel () {
+            if (!this._reel) {
+                this._reel = this.player.closest('ytd-reel-video-renderer')
+            }
+
+            return this._reel
+        }
+
         get container () {
             if (!this._container) {
-                const container = this.player.closest('#player-container')
-                this._container = container
+                this._container = this.player.closest('#player-container')
             }
 
             return this._container
@@ -376,8 +399,7 @@
 
         get overlay () {
             if (!this._overlay) {
-                const overlay = this.player.closest('ytd-reel-video-renderer').querySelector('#overlay')
-                this._overlay = overlay
+                this._overlay = this.reel.querySelector('#overlay')
             }
 
             return this._overlay
@@ -436,9 +458,11 @@
 }
 
 .${PANEL_CLASSNAME}-additional {
-    top: 1rem;
+    top: -20px;
     right: 0;
     position: absolute;
+
+    transition: all .2s ease-in;
 }
 
 .${PANEL_CLASSNAME},
@@ -692,6 +716,10 @@ ytd-reel-video-renderer:hover .yts-collapse-player {
 
 ytd-reel-video-renderer:hover .${PANEL_CLASSNAME}-small {
     bottom: -5px;
+}
+
+ytd-reel-video-renderer:hover .${PANEL_CLASSNAME}-additional {
+    top: 1rem;
 }
             `
 
