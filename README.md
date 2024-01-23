@@ -2,16 +2,19 @@
 Adds video navigation and audio control to youtube shorts videos
 
 ## Default / Обычное поведение
-![Preview functional](https://i.imgur.com/H1FQJK2.png)
+![Preview functional](https://i.imgur.com/zF1QCG2.png)
 
 ## On hover / При наведении
-![Preview functional](https://i.imgur.com/AMztCwD.png)
+![Preview functional](https://i.imgur.com/fgmcBr0.png)
 
 ## On change video position / При изменении позиции видео
-![Preview functional](https://i.imgur.com/kLSlsI4.png)
+![Preview functional](https://i.imgur.com/QIdI44o.png)
+
+## On speed playback change / При изменении скорости воспроизведения видео
+![Preview functional](https://i.imgur.com/V0ABITj.png)
 
 ## On volume change / При изменении громкости звука
-![Preview functional](https://i.imgur.com/MxEDcHv.png)
+![Preview functional](https://i.imgur.com/kodP9bs.png)
 
 # Instructions
 
