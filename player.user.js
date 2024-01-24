@@ -2,7 +2,7 @@
 // @name         Youtube Shorts Player
 // @namespace    https://www.youtube.com/
 // @match        https://www.youtube.com/*
-// @version      0.0.10
+// @version      0.0.11
 // @updateURL    https://raw.githubusercontent.com/aleqsunder/youtube-shorts-player/main/player.user.js
 // @downloadURL  https://raw.githubusercontent.com/aleqsunder/youtube-shorts-player/main/player.user.js
 // @description  Allow to control shorts player
@@ -479,7 +479,7 @@
         for (let mutation of mutations) {
             for (let node of mutation.addedNodes) {
                 if (node.tagName == PLAYER_TAG_NAME && node.id == PLAYER_ID) {
-                    updatePlayerCallback(node)
+                    setTimeout(_ => updatePlayerCallback(node), 100)
                     videoObserver.disconnect()
                 }
             }
