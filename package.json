@@ -1,0 +1,14 @@
+{
+  "name": "youtube-shorts-player",
+  "version": "0.1.0",
+  "repository": "https://github.com/aleqsunder/youtube-shorts-player",
+  "author": "aleqsunder <al.eq@outlook.com>",
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "webpack": "^5.90.2",
+    "webpack-cli": "^5.1.4",
+    "css-loader": "^6.10.0",
+    "style-loader": "^3.3.4"
+  }
+}
