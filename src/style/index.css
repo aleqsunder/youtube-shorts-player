@@ -1,0 +1,282 @@
+.yts-aleqsunder-controls {
+    padding: 1rem;
+}
+
+.yts-aleqsunder-controls > *:not(:first-child) {
+    margin-left: 1.25rem;
+}
+
+.yts-aleqsunder-controls-small {
+    padding: 0;
+    position: absolute;
+    bottom: 48px;
+    width: 100%;
+
+    transition: all .2s ease-in;
+}
+
+.yts-aleqsunder-controls-additional {
+    top: -20px;
+    right: 0;
+    position: absolute;
+
+    transition: all .2s ease-in;
+}
+
+.yts-aleqsunder-controls,
+.yts-aleqsunder-controls-audio {
+    z-index: 1;
+    pointer-events: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.yts-aleqsunder-controls-audio {
+    transform: rotate(-90deg);
+    transform-origin: top left;
+    position: absolute !important;
+    bottom: 17px;
+    right: -121px;
+
+    transition: all .4s ease-in;
+}
+
+.yts-aleqsunder-controls-audio-block {
+    position: relative;
+}
+
+.yts-aleqsunder-controls-audio-block input[type="range"] {
+    opacity: 0;
+    top: 35px;
+}
+
+.yts-aleqsunder-controls-audio-block:before {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    width: 47px;
+    height: 195px;
+    background: #00000000;
+    border-top-left-radius: 7px;
+    opacity: 0;
+}
+
+.yts-aleqsunder-controls-audio-block:hover:before {
+    opacity: 1;
+}
+
+.yts-aleqsunder-controls-audio-block:hover input[type="range"] {
+    opacity: 1;
+    top: -8px;
+}
+
+.yts-aleqsunder-controls-range-labels {
+    position: absolute;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-between;
+
+    bottom: -3px;
+    right: 22px;
+    height: 126px;
+    text-align: right;
+    color: white;
+
+    opacity: 0;
+    transition: all .1s ease-in;
+}
+
+.yts-aleqsunder-controls-audio-block:hover .yts-aleqsunder-controls-range-labels {
+    opacity: 1;
+    bottom: 40px;
+}
+
+.yts-aleqsunder-controls input.yts-aleqsunder-controls-input[type="range"] {
+    flex: 1;
+
+    color: #ef233c;
+    --thumb-height: 16px;
+    --thumb-width: 16px;
+    --track-height: 0.5rem;
+    --track-color: rgba(255, 255, 255, .7);
+    --brightness-hover: 180%;
+    --brightness-down: 80%;
+    --clip-edges: 0em;
+}
+
+.yts-aleqsunder-controls .yts-aleqsunder-controls-audio-block input.yts-aleqsunder-controls-input[type="range"] {
+    margin: 0 1.25rem;
+}
+
+.yts-aleqsunder-controls input.yts-aleqsunder-controls-input-small[type="range"] {
+    flex: 1;
+
+    color: #ef233c;
+    --thumb-height: 0.2rem;
+    --track-height: 0.2rem;
+    --track-color: rgba(255, 255, 255, .7);
+    --brightness-hover: 180%;
+    --brightness-down: 80%;
+    --clip-edges: 0em;
+}
+
+/* === range commons === */
+.yts-aleqsunder-controls input[type="range"] {
+    position: relative;
+    background: #fff0;
+    overflow: hidden;
+}
+
+.yts-aleqsunder-controls input[type="range"]:active {
+    cursor: grabbing;
+}
+
+/* === WebKit specific styles === */
+.yts-aleqsunder-controls input[type="range"],
+.yts-aleqsunder-controls input[type="range"]::-webkit-slider-runnable-track,
+.yts-aleqsunder-controls input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    transition: all ease 100ms;
+    height: var(--thumb-height);
+}
+
+.yts-aleqsunder-controls input[type="range"]::-webkit-slider-runnable-track,
+.yts-aleqsunder-controls input[type="range"]::-webkit-slider-thumb {
+    position: relative;
+}
+
+.yts-aleqsunder-controls input[type="range"]::-webkit-slider-thumb {
+    --thumb-radius: calc((var(--thumb-height) * 0.5) - 1px);
+    --clip-top: calc((var(--thumb-height) - var(--track-height)) * 0.5 - 0.5px);
+    --clip-bottom: calc(var(--thumb-height) - var(--clip-top));
+    --clip-further: calc(100% + 1px);
+    --box-fill: calc(-100vmax - var(--thumb-width, var(--thumb-height))) 0 0
+    100vmax currentColor;
+
+    width: var(--thumb-width, var(--thumb-height));
+    background: linear-gradient(currentColor 0 0) scroll no-repeat left center /
+		50% calc(var(--track-height) + 1px);
+    background-color: currentColor;
+    box-shadow: var(--box-fill);
+    border-radius: var(--thumb-width, var(--thumb-height));
+
+    filter: brightness(100%);
+    clip-path: polygon(
+            100% -1px,
+            var(--clip-edges) -1px,
+            0 var(--clip-top),
+            -100vmax var(--clip-top),
+            -100vmax var(--clip-bottom),
+            0 var(--clip-bottom),
+            var(--clip-edges) 100%,
+            var(--clip-further) var(--clip-further)
+    );
+}
+
+.yts-aleqsunder-controls input[type="range"]:hover::-webkit-slider-thumb {
+    filter: brightness(var(--brightness-hover));
+    cursor: grab;
+}
+
+.yts-aleqsunder-controls input[type="range"]:active::-webkit-slider-thumb {
+    filter: brightness(var(--brightness-down));
+    cursor: grabbing;
+}
+
+.yts-aleqsunder-controls input[type="range"]::-webkit-slider-runnable-track {
+    background: linear-gradient(var(--track-color) 0 0) scroll no-repeat center /
+		100% calc(var(--track-height) + 1px);
+}
+
+.yts-aleqsunder-controls input[type="range"]:disabled::-webkit-slider-thumb {
+    cursor: not-allowed;
+}
+
+/* === Firefox specific styles === */
+.yts-aleqsunder-controls input[type="range"],
+.yts-aleqsunder-controls input[type="range"]::-moz-range-track,
+.yts-aleqsunder-controls input[type="range"]::-moz-range-thumb {
+    appearance: none;
+    transition: all ease 100ms;
+    height: var(--thumb-height);
+}
+
+.yts-aleqsunder-controls input[type="range"]::-moz-range-track,
+.yts-aleqsunder-controls input[type="range"]::-moz-range-thumb,
+.yts-aleqsunder-controls input[type="range"]::-moz-range-progress {
+    background: #fff0;
+}
+
+.yts-aleqsunder-controls input[type="range"]::-moz-range-thumb {
+    background: currentColor;
+    border: 0;
+    width: var(--thumb-width, var(--thumb-height));
+    border-radius: var(--thumb-width, var(--thumb-height));
+    cursor: grab;
+}
+
+.yts-aleqsunder-controls input[type="range"]:active::-moz-range-thumb {
+    cursor: grabbing;
+}
+
+.yts-aleqsunder-controls input[type="range"]::-moz-range-track {
+    width: 100%;
+    background: var(--track-color);
+}
+
+.yts-aleqsunder-controls input[type="range"]::-moz-range-progress {
+    appearance: none;
+    background: currentColor;
+    transition-delay: 30ms;
+}
+
+.yts-aleqsunder-controls input[type="range"]::-moz-range-track,
+.yts-aleqsunder-controls input[type="range"]::-moz-range-progress {
+    height: calc(var(--track-height) + 1px);
+    border-radius: var(--track-height);
+}
+
+.yts-aleqsunder-controls input[type="range"]::-moz-range-thumb,
+.yts-aleqsunder-controls input[type="range"]::-moz-range-progress {
+    filter: brightness(100%);
+}
+
+.yts-aleqsunder-controls input[type="range"]:hover::-moz-range-thumb,
+.yts-aleqsunder-controls input[type="range"]:hover::-moz-range-progress {
+    filter: brightness(var(--brightness-hover));
+}
+
+.yts-aleqsunder-controls input[type="range"]:active::-moz-range-thumb,
+.yts-aleqsunder-controls input[type="range"]:active::-moz-range-progress {
+    filter: brightness(var(--brightness-down));
+}
+
+.yts-aleqsunder-controls input[type="range"]:disabled::-moz-range-thumb {
+    cursor: not-allowed;
+}
+
+.yts-collapse-player {
+    position: relative;
+
+    top: 50px;
+    transition: all .2s ease-in;
+}
+
+ytd-reel-video-renderer .ytd-reel-video-renderer {
+    border-radius: 0 0 12px 12px;
+}
+
+ytd-reel-video-renderer:hover .yts-collapse-player {
+    top: 0px;
+}
+
+ytd-reel-video-renderer:hover .yts-aleqsunder-controls-small {
+    bottom: -5px;
+}
+
+ytd-reel-video-renderer:hover .yts-aleqsunder-controls-additional {
+    top: 1rem;
+}
