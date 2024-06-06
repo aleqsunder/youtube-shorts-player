@@ -1,3 +1,8 @@
+# Closed
+EN: That's it, youtube has implemented the last thing I did in this extension. Now the extension is no different from the original shorts functionality (except perhaps for the video rewind speed, but I don’t think that’s really that important). Well, now I don't have to keep it running!
+
+RU: Всё, youtube реализовал последнее, что я сделал в данном расширении. Теперь расширение ничем не отличается от оригинального функционала shorts (кроме разве что скорости перемотки видео, но не думаю, что это прям настолько важно). Чтож, теперь мне не придётся поддерживать его работоспособность!
+
 # youtube-shorts-player
 Adds video navigation and audio control to youtube shorts videos
 
